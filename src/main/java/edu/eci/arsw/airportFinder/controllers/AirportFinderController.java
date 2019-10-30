@@ -21,8 +21,10 @@ public class AirportFinderController {
     @RequestMapping(method = RequestMethod.GET, path="/{city}")
     public ResponseEntity<?> manejadorGetRecursoBlueprints(@PathVariable("city") String city) {
         try {
+            //HttpResponse<JsonNode> res = HttpConnectionService.getAirportByName(city);
             HttpResponse<JsonNode> res = HttpConnectionService.getAirportByName(city);
-            return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
+            System.out.println(res.getBody().toString());
+            return new ResponseEntity<>(res.getBody().toString(), HttpStatus.ACCEPTED);
         } catch (Exception ex) {
             Logger.getLogger(AirportFinderController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>("Error", HttpStatus.NOT_FOUND);

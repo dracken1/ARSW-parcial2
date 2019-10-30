@@ -3,9 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <title>AirportFinder</title>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        .h{
+            margin: 35px 0 20px 0;
+            padding: 0 0 0 0;
+        }
+        .ponerinfor{
+            width: 100%;
+            height: 100%;
+            border: 1px solid #000000;
+        }
+        .contenido{
+            position: absolute;
+            left: 1%;
+            width: 100vw;
+            height: 50vh;
+            margin: 0 0 0 0;
+        }
+        .mapita{
+            height: 100%;
+            width: 100%;
+        }
+    </style>
 </head>
 
 <body>
@@ -21,8 +43,44 @@
         </div>
     </div>
     <div class="h contenido row">
-        <input type="text" class="ponerinfor" readonly>
+        <div class="contenedorcontenido col-md-6">
+            <input id="contenidoid" type="text" class="ponerinfor" readonly>
+        </div>
+        <div id="mapitaid" class="mapita col-md-6">
+
+        </div>
+
     </div>
 </body>
-<script src="JS/airportfinder.js"></script>
+<script>
+   $("#buscarbtnid").click(function(){
+    alert("funca");
+       var ciudad = document.getElementById('campotextoid').value;
+       var url = '/airports/' + ciudad;
+       var map;
+           fetch(url, {
+               method: 'GET',
+               headers: {
+                   'Content-Type': 'application/json'
+               }
+           })
+           .then(response => response.json())
+           .then(data => {
+               console.log(data);
+               map = new google.maps.Map(document.getElementById('mapitaid'), {
+                center: {lat: data[0].location.latitude, lng: data[0].location.longitude},
+                zoom: 8
+                });
+               for(var i in data){
+                    var mostrarresultado = "Codigo Aeropurto: " + data[i].code + ", Aeropuerto: " + data[i].name + ", Ciudad: " + data[i].city + ", Codigo pais:" + data[i].countryCode;
+                    document.getElementById("contenidoid").value = mostrarresultado;
+                    console.log(mostrarresultado);
+                    var latlong = {lat: data[i].location.latitude, lng: data[i].location.longitude};
+                    var marker = new google.maps.Marker({position: latlong, map: map});
+               }
+            });
+       });
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBEk_kq5UV9HtvFVNLm07-GXrEBefmdiUM&callback=initMap"
+        type="text/javascript"></script>
 </html>

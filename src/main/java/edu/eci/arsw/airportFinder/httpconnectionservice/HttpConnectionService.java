@@ -9,7 +9,7 @@ import edu.eci.arsw.airportFinder.cache.AirportFinderCache;
 
 public class HttpConnectionService {
 
-    static String response;
+    static Object response;
 
     public static HttpResponse<JsonNode> getAirportByName(String name) throws UnirestException {
         HttpResponse<JsonNode> jsonResponse
@@ -18,17 +18,17 @@ public class HttpConnectionService {
                 .header("x-rapidapi-key", "4c9808cb42msh4449ed2c1fe658dp107e4ejsn237d8c1fe675")
                 .queryString("text",name)
                 .asJson();
-        AirportFinderCache.add(jsonResponse.getBody().toString());
+        //AirportFinderCache.add(jsonResponse.getBody().toString());
         return jsonResponse;
     }
 
-    public static String findAirportByName(String name) throws UnirestException {
-        response = getAirportByName(name).toString();
+    public static Object findAirportByName(String name) throws UnirestException {
+        response = getAirportByName(name).getBody().getObject();
         return response;
     }
 
     public static void main(String[] args) throws UnirestException {
         HttpConnectionService n = new HttpConnectionService();
-        System.out.println(n.getAirportByName("berlin").getBody());
+        System.out.println(n.getAirportByName("berlin").getBody().toString());
     }
 }
